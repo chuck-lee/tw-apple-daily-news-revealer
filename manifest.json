@@ -1,0 +1,16 @@
+{
+    "manifest_version": 2,
+    "name": "Taiwan Apple Daily News Revealer",
+    "version": "1.0",
+    "description": "Skip Login and Read the Content of Taiwan Apple Daily News Directly (*.appledaily.com).",
+    "content_scripts": [
+        {
+            "matches": [
+                "*://*.appledaily.com/*"
+            ],
+            "js": [
+                "reveal.js"
+            ]
+        }
+    ]
+}
