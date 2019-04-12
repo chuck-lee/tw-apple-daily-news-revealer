@@ -19,9 +19,15 @@ function reveal_content_desktop()
         ndPaywall[i].style.display = 'none';
     }
 
-    var ndArticle_margin = document.getElementsByClassName('ndArticle_margin');
-    for (var i = 0; i < ndArticle_margin.length; i++) {
-        ndArticle_margin[i].style.display = '';
+    var article_elements = document.getElementsByTagName('article');
+    for (var i = 0; i < article_elements.length; i++) {
+        if (article_elements[i].classList.contains("ndArticle_content")) {
+            var div_elements = article_elements[i].getElementsByTagName('div');
+            for (var j = 0; j < div_elements.length; j++) {
+                div_elements[j].style.display = '';
+            }
+            break;
+        }
     }
 }
 
