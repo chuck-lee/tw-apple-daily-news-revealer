@@ -25,6 +25,20 @@ function reveal_content_mobile()
     }, 2500);
 }
 
+var debug_div = document.createElement('div');
+function debug(message)
+{
+    var debug_p = document.createElement('p');
+    var debug_message = document.createTextNode(message);
+    debug_p.appendChild(debug_message);
+    debug_div.appendChild(debug_p);
+}
+
+function show_debug(element)
+{
+    element.appendChild(debug_div);
+}
+
 function reveal_content_desktop()
 {
     var ndPaywall = document.getElementsByClassName('ndPaywall');
