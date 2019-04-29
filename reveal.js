@@ -131,6 +131,16 @@ function reveal_content()
 
 document.addEventListener('readystatechange', (event) => {
     if (document.readyState == "complete") {
+        // Force stop content re-hide
+        try {
+            // This breaks the barrier between extension and main page, but it
+            // seems to be the only way to get interval ID to stop it.
+            var contentV = XPCNativeWrapper(window.wrappedJSObject.contentV);
+            window.clearInterval(contentV);
+        } catch {
+            ;
+        }
+
         reveal_content();
     }
 })
