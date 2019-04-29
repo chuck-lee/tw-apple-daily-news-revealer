@@ -39,24 +39,22 @@ function show_debug(element)
     element.appendChild(debug_div);
 }
 
-function reveal_content_desktop()
+function reveal_video_desktop()
 {
-    var ndPaywall = document.getElementsByClassName('ndPaywall');
-    for (var i = 0; i < ndPaywall.length; i++) {
-        ndPaywall[i].style.display = 'none';
+    var video_data_json = null;
+    if (PRESERVED_DOM_ELEMENTS['video_player'] !== undefined) {
+        video_data_json = PRESERVED_DOM_ELEMENTS['video_player'].childNodes[0].dataset['anvp'];
+    } else if (PRESERVED_DOM_ELEMENTS['playerVideo'] !== undefined) {
+        video_data_json = PRESERVED_DOM_ELEMENTS['playerVideo'].childNodes[0].lastChild.dataset['anvp'];
     }
 
-    var ndPaywallVideo = document.getElementsByClassName('ndPaywallVideo');
-    for (var i = 0; i < ndPaywallVideo.length; i++) {
-        ndPaywallVideo[i].style.display = 'none';
+    if (video_data_json === null) {
+        return;
     }
 
-    // Restore deleted content
     try {
-        // Restore video content if exists
-        var video_data = JSON.parse(
-            PRESERVED_DOM_ELEMENTS['playerVideo'].childNodes[0].lastChild.dataset['anvp']
-        );
+        // Reconstruct video content
+        var video_data = JSON.parse(video_data_json);
 
         var source = document.createElement("source");
         source.src = video_data['url'];
@@ -70,16 +68,52 @@ function reveal_content_desktop()
         video.appendChild(source);
         video.load();
 
+        // Restore video content
         var thoracis = document.getElementsByClassName('thoracis')[0];
         thoracis.appendChild(video);
     } catch (e) {
         ;
     }
+}
 
-    // Restore article content
-    var ndArticle_content = document.getElementsByClassName('ndArticle_content')[0];
-    ndArticle_content.insertBefore(PRESERVED_DOM_ELEMENTS['ndArticle_margin'],
-                                   ndArticle_content.childNodes[0]);
+function reveal_article_desktop()
+{
+    try {
+        // Find and hide the secret element in the content to bypass content re-hide
+        var ndArticle_margin = PRESERVED_DOM_ELEMENTS['ndArticle_margin'];
+        var secret_element_tag_name_regex = /[a-zA-Z0-9]{33}-[a-zA-Z0-9]{32}/;
+        var element_tag_list = ndArticle_margin.getElementsByTagName("*");
+        for (var i = 0; i < element_tag_list.length; i++) {
+            var element = element_tag_list[i];
+            if (element.tagName.search(secret_element_tag_name_regex) >= 0) {
+                element.style.display = 'none';
+            }
+        }
+
+        // Restore article content
+        var ndArticle_content = document.getElementsByClassName('ndArticle_content')[0];
+        ndArticle_content.insertBefore(ndArticle_margin,
+                                       ndArticle_content.childNodes[0]);
+    } catch (e) {
+        ;
+    }
+}
+
+function reveal_content_desktop()
+{
+    var ndPaywall = document.getElementsByClassName('ndPaywall');
+    for (var i = 0; i < ndPaywall.length; i++) {
+        ndPaywall[i].style.display = 'none';
+    }
+
+    var ndPaywallVideo = document.getElementsByClassName('ndPaywallVideo');
+    for (var i = 0; i < ndPaywallVideo.length; i++) {
+        ndPaywallVideo[i].style.display = 'none';
+    }
+
+    // Restore deleted content
+    reveal_video_desktop();
+    reveal_article_desktop();
 }
 
 function reveal_content()
@@ -97,6 +131,16 @@ function reveal_content()
 
 document.addEventListener('readystatechange', (event) => {
     if (document.readyState == "complete") {
+        // Force stop content re-hide
+        try {
+            // This breaks the barrier between extension and main page, but it
+            // seems to be the only way to get interval ID to stop it.
+            var contentV = XPCNativeWrapper(window.wrappedJSObject.contentV);
+            window.clearInterval(contentV);
+        } catch {
+            ;
+        }
+
         reveal_content();
     }
 })
