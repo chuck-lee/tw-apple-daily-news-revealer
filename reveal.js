@@ -39,6 +39,43 @@ function show_debug(element)
     element.appendChild(debug_div);
 }
 
+function reveal_video_desktop()
+{
+    var video_data_json = null;
+    if (PRESERVED_DOM_ELEMENTS['video_player'] !== undefined) {
+        video_data_json = PRESERVED_DOM_ELEMENTS['video_player'].childNodes[0].dataset['anvp'];
+    } else if (PRESERVED_DOM_ELEMENTS['playerVideo'] !== undefined) {
+        video_data_json = PRESERVED_DOM_ELEMENTS['playerVideo'].childNodes[0].lastChild.dataset['anvp'];
+    }
+
+    if (video_data_json === null) {
+        return;
+    }
+
+    try {
+        // Reconstruct video content
+        var video_data = JSON.parse(video_data_json);
+
+        var source = document.createElement("source");
+        source.src = video_data['url'];
+        source.type = 'video/mp4';
+
+        var video = document.createElement('video');
+        video.width = parseInt(video_data['width'], 10);
+        video.height = parseInt(video_data['height'], 10);
+        video.autoplay = false;
+        video.controls = true;
+        video.appendChild(source);
+        video.load();
+
+        // Restore video content
+        var thoracis = document.getElementsByClassName('thoracis')[0];
+        thoracis.appendChild(video);
+    } catch (e) {
+        ;
+    }
+}
+
 function reveal_article_desktop()
 {
     try {
@@ -75,30 +112,7 @@ function reveal_content_desktop()
     }
 
     // Restore deleted content
-    try {
-        // Restore video content if exists
-        var video_data = JSON.parse(
-            PRESERVED_DOM_ELEMENTS['playerVideo'].childNodes[0].lastChild.dataset['anvp']
-        );
-
-        var source = document.createElement("source");
-        source.src = video_data['url'];
-        source.type = 'video/mp4';
-
-        var video = document.createElement('video');
-        video.width = parseInt(video_data['width'], 10);
-        video.height = parseInt(video_data['height'], 10);
-        video.autoplay = false;
-        video.controls = true;
-        video.appendChild(source);
-        video.load();
-
-        var thoracis = document.getElementsByClassName('thoracis')[0];
-        thoracis.appendChild(video);
-    } catch (e) {
-        ;
-    }
-
+    reveal_video_desktop();
     reveal_article_desktop();
 }
 
