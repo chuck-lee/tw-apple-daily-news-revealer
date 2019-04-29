@@ -39,6 +39,29 @@ function show_debug(element)
     element.appendChild(debug_div);
 }
 
+function reveal_article_desktop()
+{
+    try {
+        // Find and hide the secret element in the content to bypass content re-hide
+        var ndArticle_margin = PRESERVED_DOM_ELEMENTS['ndArticle_margin'];
+        var secret_element_tag_name_regex = /[a-zA-Z0-9]{33}-[a-zA-Z0-9]{32}/;
+        var element_tag_list = ndArticle_margin.getElementsByTagName("*");
+        for (var i = 0; i < element_tag_list.length; i++) {
+            var element = element_tag_list[i];
+            if (element.tagName.search(secret_element_tag_name_regex) >= 0) {
+                element.style.display = 'none';
+            }
+        }
+
+        // Restore article content
+        var ndArticle_content = document.getElementsByClassName('ndArticle_content')[0];
+        ndArticle_content.insertBefore(ndArticle_margin,
+                                       ndArticle_content.childNodes[0]);
+    } catch (e) {
+        ;
+    }
+}
+
 function reveal_content_desktop()
 {
     var ndPaywall = document.getElementsByClassName('ndPaywall');
@@ -76,10 +99,7 @@ function reveal_content_desktop()
         ;
     }
 
-    // Restore article content
-    var ndArticle_content = document.getElementsByClassName('ndArticle_content')[0];
-    ndArticle_content.insertBefore(PRESERVED_DOM_ELEMENTS['ndArticle_margin'],
-                                   ndArticle_content.childNodes[0]);
+    reveal_article_desktop();
 }
 
 function reveal_content()
