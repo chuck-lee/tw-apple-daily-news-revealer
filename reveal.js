@@ -6,7 +6,8 @@ var PRESERVE_IDS = [
 var PRESERVE_CLASSES = [
     'ndAritcle_headPic',
     'ndArticle_margin',
-    'mediabox'
+    'mediabox',
+    'articulum'
 ];
 
 var PRESERVED_DOM_ELEMENTS = {};
@@ -76,24 +77,40 @@ function reveal_video_desktop()
     }
 }
 
+function hide_secret_tag_in_destkop_article_element(article_element)
+{
+    var secret_element_tag_name_regex = /[a-zA-Z0-9]{33}-[a-zA-Z0-9]{32}/;
+    var element_tag_list = article_element.getElementsByTagName("*");
+    for (var i = 0; i < element_tag_list.length; i++) {
+        var element = element_tag_list[i];
+        if (element.tagName.search(secret_element_tag_name_regex) >= 0) {
+            element.style.display = 'none';
+        }
+    }
+    return article_element
+}
+
 function reveal_article_desktop()
 {
     try {
-        // Find and hide the secret element in the content to bypass content re-hide
-        var ndArticle_margin = PRESERVED_DOM_ELEMENTS['ndArticle_margin'];
-        var secret_element_tag_name_regex = /[a-zA-Z0-9]{33}-[a-zA-Z0-9]{32}/;
-        var element_tag_list = ndArticle_margin.getElementsByTagName("*");
-        for (var i = 0; i < element_tag_list.length; i++) {
-            var element = element_tag_list[i];
-            if (element.tagName.search(secret_element_tag_name_regex) >= 0) {
-                element.style.display = 'none';
-            }
+        if (PRESERVED_DOM_ELEMENTS['ndArticle_margin'] !== undefined) {
+            // Find and hide the secret element in the content to bypass content re-hide
+            var article_element = hide_secret_tag_in_destkop_article_element(
+                PRESERVED_DOM_ELEMENTS['ndArticle_margin']
+            );
+            // Restore article content
+            var ndArticle_content = document.getElementsByClassName('ndArticle_content')[0];
+            ndArticle_content.insertBefore(article_element,
+                                           ndArticle_content.childNodes[0]);
+        } else if (PRESERVED_DOM_ELEMENTS['articulum'] !== undefined) {
+            // Find and hide the secret element in the content to bypass content re-hide
+            var article_element = hide_secret_tag_in_destkop_article_element(
+                PRESERVED_DOM_ELEMENTS['articulum']
+            );
+            var abdominis = document.getElementsByClassName('abdominis')[0];
+            var article = abdominis.getElementsByTagName('article')[0];
+            abdominis.insertBefore(article_element, article.nextSibling);
         }
-
-        // Restore article content
-        var ndArticle_content = document.getElementsByClassName('ndArticle_content')[0];
-        ndArticle_content.insertBefore(ndArticle_margin,
-                                       ndArticle_content.childNodes[0]);
     } catch (e) {
         ;
     }
