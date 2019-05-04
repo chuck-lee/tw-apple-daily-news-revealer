@@ -6,7 +6,8 @@ var PRESERVE_IDS = [
 var PRESERVE_CLASSES = [
     'ndAritcle_headPic',
     'ndArticle_margin',
-    'mediabox'
+    'mediabox',
+    'articulum'
 ];
 
 var PRESERVED_DOM_ELEMENTS = {};
