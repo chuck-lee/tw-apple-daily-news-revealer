@@ -7,6 +7,7 @@ var PRESERVE_CLASSES = [
     'ndAritcle_headPic',
     'ndArticle_margin',
     'mediabox',
+    'article-content',
     'articulum'
 ];
 
@@ -110,6 +111,17 @@ function reveal_article_desktop()
             var abdominis = document.getElementsByClassName('abdominis')[0];
             var article = abdominis.getElementsByTagName('article')[0];
             abdominis.insertBefore(article_element, article.nextSibling);
+        } else if (PRESERVED_DOM_ELEMENTS['article-content'] !== undefined) {
+            // Find and hide the secret element in the content to bypass content re-hide
+            var article_element = hide_secret_tag_in_destkop_article_element(
+                PRESERVED_DOM_ELEMENTS['article-content']
+            );
+
+            var video_player_wrap_element = article_element.getElementsByClassName('video-player-wrap')[0];
+            video_player_wrap_element.style.display = 'none';
+
+            var ndPaywall = document.getElementsByClassName('ndPaywall')[0];
+            ndPaywall.parentNode.insertBefore(article_element, ndPaywall.nextSibling);
         }
     } catch (e) {
         ;
