@@ -129,8 +129,10 @@ function reveal_article_desktop()
                 PRESERVED_DOM_ELEMENTS['article-content']
             );
 
-            var video_player_wrap_element = article_element.getElementsByClassName('video-player-wrap')[0];
-            video_player_wrap_element.style.display = 'none';
+            var video_player_wrap_element = article_element.getElementsByClassName('video-player-wrap');
+            for (var i = 0; i < video_player_wrap_element.length; i++) {
+                video_player_wrap_element[i].style.display = 'none';
+            }
 
             var ndPaywall = document.getElementsByClassName('ndPaywall')[0];
             ndPaywall.parentNode.insertBefore(article_element, ndPaywall.nextSibling);
