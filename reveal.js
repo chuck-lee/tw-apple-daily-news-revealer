@@ -160,7 +160,8 @@ function reveal_content_desktop()
 function reveal_content()
 {
     // Detect site mode.
-    var isMobile = document.body.classList.contains("ui-mobile-viewport");
+    var isMobile = document.body.classList.contains("ui-mobile-viewport") ||
+                    document.body.style.overflowY == 'hidden';
 
     if (isMobile) {
         reveal_content_mobile();
