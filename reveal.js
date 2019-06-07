@@ -192,8 +192,8 @@ function preserve_node(node)
     for (var i = 0; i < PRESERVE_IDS.length; i++) {
         var preserve_id = PRESERVE_IDS[i];
         if (node.id == preserve_id) {
-            node.style.display = '';
             PRESERVED_DOM_ELEMENTS[preserve_id] = node.cloneNode(true);
+            PRESERVED_DOM_ELEMENTS[preserve_id].style.display = 'block';
             return;
         }
     }
@@ -201,8 +201,8 @@ function preserve_node(node)
     for (var i = 0; i < PRESERVE_CLASSES.length; i++) {
         var preserve_class = PRESERVE_CLASSES[i];
         if (node.classList.contains(preserve_class)) {
-            node.style.display = '';
             PRESERVED_DOM_ELEMENTS[preserve_class] = node.cloneNode(true);
+            PRESERVED_DOM_ELEMENTS[preserve_class].style.display = 'block';
             return;
         }
     }
