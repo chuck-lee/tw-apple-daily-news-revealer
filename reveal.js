@@ -63,16 +63,28 @@ function reveal_video_desktop()
         source.type = 'video/mp4';
 
         var video = document.createElement('video');
-        video.width = parseInt(video_data['width'], 10);
-        video.height = parseInt(video_data['height'], 10);
+        video.style.width = video_data['width'];
+        video.style.height = video_data['height'];
         video.autoplay = false;
         video.controls = true;
         video.appendChild(source);
         video.load();
 
         // Restore video content
-        var thoracis = document.getElementsByClassName('thoracis')[0];
-        thoracis.appendChild(video);
+        var thoracis = document.getElementsByClassName('thoracis');
+        debug(thoracis.length);
+        if (thoracis.length > 0) {
+            thoracis[0].appendChild(video);
+            return;
+        }
+
+        var ndPaywall = document.getElementsByClassName('ndPaywall');
+        debug(ndPaywall.length);
+        if (ndPaywall.length > 0) {
+            var ndPaywall_element = ndPaywall[0];
+            ndPaywall_element.parentNode.insertBefore(video, ndPaywall_element);
+            return;
+        }
     } catch (e) {
         ;
     }
