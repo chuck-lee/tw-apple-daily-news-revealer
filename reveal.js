@@ -196,6 +196,7 @@ function preserve_node(node)
         if (node.id == preserve_id) {
             PRESERVED_DOM_ELEMENTS[preserve_id] = node.cloneNode(true);
             PRESERVED_DOM_ELEMENTS[preserve_id].style.display = 'block';
+            PRESERVED_DOM_ELEMENTS[preserve_id].style.visibility = 'visible';
             return;
         }
     }
@@ -205,6 +206,7 @@ function preserve_node(node)
         if (node.classList.contains(preserve_class)) {
             PRESERVED_DOM_ELEMENTS[preserve_class] = node.cloneNode(true);
             PRESERVED_DOM_ELEMENTS[preserve_class].style.display = 'block';
+            PRESERVED_DOM_ELEMENTS[preserve_class].style.visibility = 'visible';
             return;
         }
     }
