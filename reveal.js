@@ -13,8 +13,20 @@ var PRESERVE_CLASSES = [
 
 var PRESERVED_DOM_ELEMENTS = {};
 
+function stop_secret_action_mobile()
+{
+    var rehide_interval = XPCNativeWrapper(
+        window.wrappedJSObject['contentV']
+    );
+    if (typeof(rehide_interval) == 'number') {
+        window.clearInterval(rehide_interval);
+    }
+}
+
 function reveal_content_mobile()
 {
+    stop_secret_action_mobile();
+
     var ndgPayway = document.getElementsByClassName('ndgPayway');
     for (var i = 0; i < ndgPayway.length; i++) {
         ndgPayway[i].style.display = 'none';
@@ -90,6 +102,27 @@ function reveal_video_desktop()
     }
 }
 
+function stop_secret_action_desktop(secret_variable_name_base)
+{
+    for (var i = 3; i <= 10; i++) {
+        var secret_variable_name = secret_variable_name_base.substr(0, i);
+        try {
+            // This breaks the barrier between extension and main page, but it
+            // seems to be the only way to get interval ID to stop it.
+            var secret_variable = XPCNativeWrapper(
+                window.wrappedJSObject[secret_variable_name]
+            );
+            if (typeof(secret_variable) == 'number') {
+                window.clearInterval(secret_variable);
+                continue;
+            }
+        } catch (e) {
+            debug(e);
+            continue;
+        }
+    }
+}
+
 function hide_secret_tag_in_destkop_article_element(article_element)
 {
     var secret_element_tag_name_regex = /[a-zA-Z0-9]{33}-[a-zA-Z0-9]{32}/;
@@ -98,6 +131,7 @@ function hide_secret_tag_in_destkop_article_element(article_element)
         var element = element_tag_list[i];
         if (element.tagName.search(secret_element_tag_name_regex) >= 0) {
             element.style.display = 'none';
+            stop_secret_action_desktop(element.tagName.toLowerCase());
         }
     }
     return article_element
@@ -175,16 +209,6 @@ function reveal_content()
 
 document.addEventListener('readystatechange', (event) => {
     if (document.readyState == "complete") {
-        // Force stop content re-hide
-        try {
-            // This breaks the barrier between extension and main page, but it
-            // seems to be the only way to get interval ID to stop it.
-            var contentV = XPCNativeWrapper(window.wrappedJSObject.contentV);
-            window.clearInterval(contentV);
-        } catch {
-            ;
-        }
-
         reveal_content();
     }
 })
