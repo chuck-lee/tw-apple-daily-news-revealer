@@ -205,7 +205,7 @@ function reveal_content()
 {
     // Detect site mode.
     var isMobile = document.body.classList.contains("ui-mobile-viewport") ||
-                    document.body.style.overflowY == 'hidden';
+                    document.body.style.overflowY != '';
 
     if (isMobile) {
         reveal_content_mobile();
