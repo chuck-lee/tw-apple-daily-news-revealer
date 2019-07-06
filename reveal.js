@@ -13,6 +13,15 @@ var PRESERVE_CLASSES = [
 
 var PRESERVED_DOM_ELEMENTS = {};
 
+function reset_overflow_mobile()
+{
+    document.body.style.overflowY = 'auto';
+    var page_role_elements = document.querySelectorAll('[data-role="page"]');
+    for (var i = 0; i < page_role_elements.length; i++) {
+        page_role_elements[i].style.overflowY = 'auto';
+    }
+}
+
 function stop_secret_action_mobile()
 {
     var rehide_interval = XPCNativeWrapper(
@@ -32,10 +41,9 @@ function reveal_content_mobile()
         ndgPayway[i].style.display = 'none';
     }
 
-    document.body.style.overflowY = 'auto';
     // Apple daily sets a timeout to disable scrolling again.
     setTimeout(function(){
-        document.body.style.overflowY = 'auto';
+        reset_overflow_mobile();
     }, 2500);
 }
 
