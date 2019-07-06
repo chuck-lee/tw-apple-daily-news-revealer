@@ -91,18 +91,16 @@ function reveal_video_desktop()
         video.load();
 
         // Restore video content
-        var thoracis = document.getElementsByClassName('thoracis');
-        debug(thoracis.length);
-        if (thoracis.length > 0) {
-            thoracis[0].appendChild(video);
+        var thoracis = document.querySelector('.thoracis');
+        if (thoracis != null) {
+            thoracis.appendChild(video);
             return;
         }
 
-        var ndPaywall = document.getElementsByClassName('ndPaywall');
+        var ndPaywall = document.querySelector('.ndPaywall');
         debug(ndPaywall.length);
-        if (ndPaywall.length > 0) {
-            var ndPaywall_element = ndPaywall[0];
-            ndPaywall_element.parentNode.insertBefore(video, ndPaywall_element);
+        if (ndPaywall != null) {
+            ndPaywall.parentNode.insertBefore(video, ndPaywall);
             return;
         }
     } catch (e) {
@@ -142,7 +140,7 @@ function hide_secret_tag_in_destkop_article_element(article_element)
             stop_secret_action_desktop(element.tagName.toLowerCase());
         }
     }
-    return article_element
+    return article_element;
 }
 
 function reveal_article_desktop()
@@ -162,6 +160,7 @@ function reveal_article_desktop()
             var article_element = hide_secret_tag_in_destkop_article_element(
                 PRESERVED_DOM_ELEMENTS['articulum']
             );
+            // Restore article content
             var abdominis = document.getElementsByClassName('abdominis')[0];
             var article = abdominis.getElementsByTagName('article')[0];
             abdominis.insertBefore(article_element, article.nextSibling);
@@ -170,7 +169,7 @@ function reveal_article_desktop()
             var article_element = hide_secret_tag_in_destkop_article_element(
                 PRESERVED_DOM_ELEMENTS['article-content']
             );
-
+            // Restore article content
             var video_player_wrap_element = article_element.getElementsByClassName('video-player-wrap');
             for (var i = 0; i < video_player_wrap_element.length; i++) {
                 video_player_wrap_element[i].style.display = 'none';
