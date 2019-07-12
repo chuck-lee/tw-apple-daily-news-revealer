@@ -108,25 +108,14 @@ function reveal_video_desktop()
     }
 }
 
-function stop_secret_action_desktop(secret_variable_name_base)
+function stop_secret_action_desktop(secret_element)
 {
-    for (var i = 3; i <= 10; i++) {
-        var secret_variable_name = secret_variable_name_base.substr(0, i);
-        try {
-            // This breaks the barrier between extension and main page, but it
-            // seems to be the only way to get interval ID to stop it.
-            var secret_variable = XPCNativeWrapper(
-                window.wrappedJSObject[secret_variable_name]
-            );
-            if (typeof(secret_variable) == 'number') {
-                window.clearInterval(secret_variable);
-                continue;
-            }
-        } catch (e) {
-            debug(e);
-            continue;
-        }
-    }
+    var parent_element = secret_element.parentNode;
+    var div_element = document.createElement('div');
+    div_element.style.display = 'none';
+
+    parent_element.replaceChild(div_element, secret_element);
+    div_element.appendChild(secret_element);
 }
 
 function hide_secret_tag_in_destkop_article_element(article_element)
@@ -136,11 +125,10 @@ function hide_secret_tag_in_destkop_article_element(article_element)
     for (var i = 0; i < element_tag_list.length; i++) {
         var element = element_tag_list[i];
         if (element.tagName.search(secret_element_tag_name_regex) >= 0) {
-            element.style.display = 'none';
-            stop_secret_action_desktop(element.tagName.toLowerCase());
+            stop_secret_action_desktop(element);
+            return article_element;
         }
     }
-    return article_element;
 }
 
 function reveal_article_desktop()
