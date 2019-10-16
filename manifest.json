@@ -1,7 +1,7 @@
 {
     "manifest_version": 2,
     "name": "Taiwan Apple Daily News Revealer",
-    "version": "1.9",
+    "version": "1.10",
     "description": "Skip Login and Read the Content of Taiwan Apple Daily News Directly (*.appledaily.com).",
     "homepage_url": "https://github.com/chuck-lee/tw-apple-daily-news-revealer",
     "content_scripts": [

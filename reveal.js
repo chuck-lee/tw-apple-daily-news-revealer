@@ -13,6 +13,20 @@ var PRESERVE_CLASSES = [
 
 var PRESERVED_DOM_ELEMENTS = {};
 
+function reveal_tw_news_forum()
+{
+    var articleOmo = document.getElementById('articleOmo');
+    articleOmo.style.display = 'none';
+
+    var scroller_truncate = document.getElementsByClassName('scroller-truncate');
+    for (var i = 0; i < scroller_truncate.length; i++) {
+        scroller_truncate[i].classList.remove('scroller-truncate');
+    }
+
+    var articleBody = document.getElementById('articleBody');
+    articleBody.style.removeProperty('max-height');
+}
+
 function reset_overflow_mobile()
 {
     document.body.style.overflowY = 'auto';
@@ -190,6 +204,11 @@ function reveal_content_desktop()
 
 function reveal_content()
 {
+    if (document.URL.startsWith('https://tw.news.appledaily.com/forum/')) {
+        reveal_tw_news_forum();
+        return;
+    }
+
     // Detect site mode.
     var isMobile = document.body.classList.contains("ui-mobile-viewport") ||
                     document.body.style.overflowY != '';
