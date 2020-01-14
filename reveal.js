@@ -13,23 +13,36 @@ var PRESERVE_CLASSES = [
 
 var PRESERVED_DOM_ELEMENTS = {};
 
-function reveal_tw_news_forum()
+function is_fusion_page_desktop()
 {
-    var articleOmo = document.getElementById('articleOmo');
-    articleOmo.style.display = 'none';
+    CONTENT_VARIABLE_START_STRING = "Fusion.globalContent=";
 
-    var scroller_truncate = document.getElementsByClassName('scroller-truncate');
-    for (var i = 0; i < scroller_truncate.length; i++) {
-        scroller_truncate[i].classList.remove('scroller-truncate');
+    inline_script_elements = document.querySelectorAll("script:not([src])");
+    for (var i = 0; i < inline_script_elements.length; i++) {
+        inline_script = inline_script_elements[i].text;
+
+        content_script_start = inline_script.indexOf(CONTENT_VARIABLE_START_STRING);
+        if (content_script_start < 0) {
+            continue;
+        }
+
+        return true;
     }
+    return false
+}
 
-    var articleBody = document.getElementById('articleBody');
-    articleBody.style.removeProperty('max-height');
+function reveal_fusion_page_desktop()
+{
+    document.querySelector(".paywall_fade").style.display = "none";
+    document.querySelector("#articleOmo").style.display = "none";
+    document.querySelector("#articleBody").class = "article_body";
+    document.querySelector("#articleBody").style = "";
 }
 
 function reset_overflow_mobile()
 {
     document.body.style.overflowY = 'auto';
+    document.body.style.overflowX = 'auto';
     var page_role_elements = document.querySelectorAll('[data-role="page"]');
     for (var i = 0; i < page_role_elements.length; i++) {
         page_role_elements[i].style.overflowY = 'auto';
@@ -179,6 +192,8 @@ function reveal_article_desktop()
 
             var ndPaywall = document.getElementsByClassName('ndPaywall')[0];
             ndPaywall.parentNode.insertBefore(article_element, ndPaywall.nextSibling);
+        } else if (is_fusion_page_desktop()) {
+            reveal_fusion_page_desktop();
         }
     } catch (e) {
         ;
@@ -204,11 +219,6 @@ function reveal_content_desktop()
 
 function reveal_content()
 {
-    if (document.URL.startsWith('https://tw.news.appledaily.com/forum/')) {
-        reveal_tw_news_forum();
-        return;
-    }
-
     // Detect site mode.
     var isMobile = document.body.classList.contains("ui-mobile-viewport") ||
                     document.body.style.overflowY != '';
